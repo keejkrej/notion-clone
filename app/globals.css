@@ -40,3 +40,45 @@ body {
 #__next {
   min-height: 100vh;
 }
+
+/* Editor: reveal block gutter controls on hover / focus-within */
+.block-gutter {
+  opacity: 0;
+  transition: opacity var(--duration-fast, 80ms) var(--easing-easeInOut, ease);
+}
+.block-row:hover .block-gutter,
+.block-row:focus-within .block-gutter {
+  opacity: 1;
+}
+
+.block-textarea::placeholder {
+  color: var(--control-fgColor-placeholder);
+  opacity: 0;
+}
+.block-textarea:focus::placeholder,
+.block-row:hover .block-textarea::placeholder {
+  opacity: 1;
+}
+.block-textarea:focus-visible {
+  outline: none;
+}
+
+/* Page hero: "Add icon / Add cover" appear on hover */
+.page-hero-actions {
+  opacity: 0;
+  transition: opacity var(--duration-fast, 80ms) var(--easing-easeInOut, ease);
+  min-height: var(--control-small-size);
+}
+.page-view:hover .page-hero-actions,
+.page-hero-actions:focus-within {
+  opacity: 1;
+}
+
+.emoji-option:hover,
+.emoji-option:focus-visible {
+  background-color: var(--control-transparent-bgColor-hover);
+}
+
+textarea::placeholder {
+  color: var(--control-fgColor-placeholder);
+}

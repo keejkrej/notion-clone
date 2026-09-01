@@ -2,6 +2,7 @@
 
 import { ThemeProvider, BaseStyles } from '@primer/react'
 import { StyledComponentsRegistry } from './styled-components-registry'
+import { WorkspaceProvider } from '@/lib/workspace-store'
 
 /**
  * App-wide Primer providers. The theme attributes that the @primer/primitives
@@ -19,7 +20,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
         nightScheme="dark"
         preventSSRMismatch
       >
-        <BaseStyles>{children}</BaseStyles>
+        <BaseStyles>
+          <WorkspaceProvider>{children}</WorkspaceProvider>
+        </BaseStyles>
       </ThemeProvider>
     </StyledComponentsRegistry>
   )

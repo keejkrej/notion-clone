@@ -1,10 +1,16 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { Providers } from '@/components/providers'
 
 export const metadata: Metadata = {
-  title: 'Primer Starter',
-  description: "A starter app built with GitHub's Primer design system.",
+  title: 'Notes — Workspace',
+  description: 'A Notion-style workspace with nested pages and a block editor, built with the Primer design system.',
+}
+
+export const viewport: Viewport = {
+  themeColor: '#0d1117',
+  width: 'device-width',
+  initialScale: 1,
 }
 
 export default function RootLayout({

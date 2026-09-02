@@ -74,6 +74,28 @@ body {
   opacity: 1;
 }
 
+/* Cover controls: reveal when hovering the cover or when focused */
+.page-hero-cover-actions {
+  opacity: 0;
+  transition: opacity var(--duration-fast, 80ms) var(--easing-easeInOut, ease);
+}
+[aria-label='Page cover']:hover .page-hero-cover-actions,
+.page-hero-cover-actions:focus-within {
+  opacity: 1;
+}
+
+/* Sidebar tree: Primer renders trailing actions always; reveal them on
+   hover / keyboard focus to keep rows quiet (they stay focusable). */
+.page-tree [class*='TreeViewItemTrailingAction-'] {
+  opacity: 0;
+  transition: opacity var(--duration-fast, 80ms) var(--easing-easeInOut, ease);
+}
+.page-tree [role='treeitem']:hover > [class*='TreeViewItemContainer'] [class*='TreeViewItemTrailingAction-'],
+.page-tree [role='treeitem']:focus > [class*='TreeViewItemContainer'] [class*='TreeViewItemTrailingAction-'],
+.page-tree [class*='TreeViewItemTrailingAction-']:focus-within {
+  opacity: 1;
+}
+
 .emoji-option:hover,
 .emoji-option:focus-visible {
   background-color: var(--control-transparent-bgColor-hover);

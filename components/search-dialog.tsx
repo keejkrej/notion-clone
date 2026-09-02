@@ -109,7 +109,7 @@ export function SearchDialog() {
           </div>
         ) : (
           <ActionList role="listbox" aria-label="Search results">
-            <ActionList.GroupHeading as="h3">{q ? 'Results' : 'Recently edited'}</ActionList.GroupHeading>
+            <ActionList.GroupHeading>{q ? 'Results' : 'Recently edited'}</ActionList.GroupHeading>
             {results.map((p, i) => {
               const crumbs = breadcrumbsFor(p.id).slice(0, -1)
               return (

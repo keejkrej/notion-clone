@@ -104,18 +104,19 @@ export function BlockEditor({ blocks, onChange, focusFirstSignal }: BlockEditorP
     setPendingFocus({ id: target.id, caret: dir === 'up' ? 'end' : 'start' })
   }
 
-  function handleTurnInto(index: number, type: BlockType) {
+  function handleTurnInto(index: number, type: BlockType, clearContent = false) {
     const cur = blocks[index]
-    update(index, { type, checked: type === 'todo' ? !!cur.checked : undefined })
+    const content = clearContent || type === 'divider' ? '' : cur.content
+    const next = blocks.slice()
+    next[index] = { ...cur, type, content, checked: type === 'todo' ? !!cur.checked : undefined }
     if (type === 'divider') {
       // Add a paragraph after a divider so the user can keep typing.
-      const next = blocks.slice()
-      next[index] = { ...cur, type, content: '' }
       const nb = makeBlock('paragraph')
       next.splice(index + 1, 0, nb)
       onChange(next)
       setPendingFocus({ id: nb.id, caret: 'start' })
     } else {
+      onChange(next)
       setPendingFocus({ id: cur.id, caret: 'end' })
     }
   }
@@ -152,7 +153,7 @@ export function BlockEditor({ blocks, onChange, focusFirstSignal }: BlockEditorP
           onArrow={(dir) => handleArrow(i, dir)}
           onInsertBelow={() => insertAfter(i)}
           onDelete={() => handleDelete(i)}
-          onTurnInto={(type) => handleTurnInto(i, type)}
+            onTurnInto={(type, clear) => handleTurnInto(i, type, clear)}
         />
       ))}
       {/* Click-to-append area */}

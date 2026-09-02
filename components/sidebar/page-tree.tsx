@@ -16,7 +16,7 @@ interface PageTreeProps {
 
 export function PageTree({ pages, currentPageId, label, flat }: PageTreeProps) {
   return (
-    <TreeView aria-label={label}>
+    <TreeView aria-label={label} className="page-tree">
       {pages.map((p) => (
         <PageTreeItem key={p.id} page={p} currentPageId={currentPageId} flat={flat} />
       ))}

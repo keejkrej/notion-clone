@@ -57,9 +57,7 @@ export function SlashMenu({ query, activeIndex, onHover, onPick }: SlashMenuProp
         </div>
       ) : (
         <ActionList role="listbox" aria-label="Block types">
-          <ActionList.GroupHeading as="h3" visuallyHidden>
-            Basic blocks
-          </ActionList.GroupHeading>
+          <ActionList.GroupHeading>Basic blocks</ActionList.GroupHeading>
           {items.map((b, i) => {
             const IconComp = b.icon
             return (

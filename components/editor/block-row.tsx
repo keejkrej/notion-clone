@@ -18,7 +18,8 @@ export interface BlockRowProps {
   onArrow: (dir: 'up' | 'down') => void
   onInsertBelow: () => void
   onDelete: () => void
-  onTurnInto: (type: BlockType) => void
+  /** Change the block type; pass `clearContent` to also empty the block (slash / markdown shortcuts). */
+  onTurnInto: (type: BlockType, clearContent?: boolean) => void
 }
 
 const textStyleFor = (type: BlockType): CSSProperties => {
@@ -78,9 +79,8 @@ export const BlockRow = forwardRef<HTMLTextAreaElement, BlockRowProps>(function 
   function pickSlash(type: BlockType) {
     setSlashOpen(false)
     setSlashQuery('')
-    // Strip the "/query" text from the block.
-    onChange({ content: '' })
-    onTurnInto(type)
+    // Strip the "/query" text from the block in the same update as the type change.
+    onTurnInto(type, true)
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -158,8 +158,7 @@ export const BlockRow = forwardRef<HTMLTextAreaElement, BlockRowProps>(function 
     if (block.type === 'paragraph') {
       const match = BLOCK_TYPES.find((b) => b.shortcut && value === b.shortcut)
       if (match) {
-        onChange({ content: '' })
-        onTurnInto(match.type)
+        onTurnInto(match.type, true)
         return
       }
     }

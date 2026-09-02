@@ -152,21 +152,14 @@ export function BlockEditor({ blocks, onChange, focusFirstSignal }: BlockEditorP
           onArrow={(dir) => handleArrow(i, dir)}
           onInsertBelow={() => insertAfter(i)}
           onDelete={() => handleDelete(i)}
-            onTurnInto={(type, clear) => handleTurnInto(i, type, clear)}
+          onTurnInto={(type, clear) => handleTurnInto(i, type, clear)}
         />
       ))}
-      {/* Click-to-append area */}
       <button
         type="button"
         aria-label="Add a block at the end"
         onClick={() => insertAfter(blocks.length - 1)}
-        style={{
-          height: 120,
-          width: '100%',
-          background: 'transparent',
-          border: 'none',
-          cursor: 'text',
-        }}
+        className="h-32 w-full cursor-text border-0 bg-transparent"
       />
     </div>
   )

@@ -1,33 +1,32 @@
-# notion-clone
+# Notion clone
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [v0](https://v0.app).
+A Notion-style workspace that runs entirely in the browser. Pages nest, databases are pages whose children are rows, and rows are full pages with properties on top and blocks below. There is no account, no backend, and no collaboration — the workspace is saved to `localStorage` under `notion-clone:workspace`.
 
-## Built with v0
-
-This repository is linked to a [v0](https://v0.app) project. You can continue developing by visiting the link below -- start new chats to make changes, and v0 will push commits directly to this repo. Every merge to `main` will automatically deploy.
-
-[Continue working on v0 →](https://v0.app/chat/projects/prj_7JnsojR9H8DtK5ZUXQtK62IiyKEb)
-
-## Getting Started
-
-First, run the development server:
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Production build:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm build
+pnpm start
+```
 
-## Learn More
+## What’s in the MVP
 
-To learn more, take a look at the following resources:
+- **Pages** nest infinitely. Title, icon, cover, favorites, breadcrumbs.
+- **Block editor** with slash commands (`/` on an empty block) and markdown shortcuts (`# `, `## `, `- `, `1. `, `[] `, `> `, ` ``` `, `---`).
+- **Databases** with table, board, and list views. Independent filters and sorts per view. Inline property editors. Rows open as pages.
+- **Search** (`⌘K` / `Ctrl+K`) over titles, block text, and property values.
+- **Trash** is soft-delete and cascades to descendants. Restore reattaches, or promotes to root if the parent is still trashed. Empty trash permanently deletes.
+- **Move to** and **Duplicate** from the page `…` menu and the sidebar tree.
+- **⌘N** / **Ctrl+N** creates a page. Sidebar **New page** also has Meeting notes and Task database templates.
+- **Settings** for workspace name and appearance (Light / Dark / System). Light is the default.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [v0 Documentation](https://v0.app/docs) - learn about v0 and how to use it.
+The first run seeds Getting started, a product roadmap with sub-pages, a **Tasks** database, a **Reading list** database, and meeting notes.
+
+Not in scope: auth, sharing, comments, realtime collab, formulas, relations, rollups, file uploads, calendar/gallery views, public pages, or AI.

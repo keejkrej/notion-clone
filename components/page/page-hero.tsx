@@ -12,9 +12,154 @@ import { useWorkspace } from '@/lib/workspace-store'
 const EMOJIS = ['📝','📚','🗺️','💡','🚀','🎯','📌','✅','🧠','🛠️','🤝','📊','🌱','🔥','⭐','🎨','🧪','📅','💬','🏠','🎓','🧭','🔒','🌈','☕','🍎','🏆','🎵','📷','✈️','💼','🧩']
 
 export function PageHero({ page, onFocusFirstBlock }: { page: Page; onFocusFirstBlock: () => void }) {
-  const { updatePage } = useWorkspace(); const [emojiOpen, setEmojiOpen] = useState(false); const titleRef = useRef<HTMLTextAreaElement>(null); const cover = coverCss(page.cover)
-  function autoSize(el: HTMLTextAreaElement | null) { if (!el) return; el.style.height = 'auto'; el.style.height = `${el.scrollHeight}px` }
-  return <div>{cover && <div role="img" aria-label="Page cover" className="relative h-52 w-full" style={{ background: cover }}><div className="page-hero-cover-actions absolute bottom-3 right-4 flex gap-2"><DropdownMenu><DropdownMenuTrigger asChild><Button size="sm" variant="secondary">Change cover</Button></DropdownMenuTrigger><DropdownMenuContent align="end">{COVERS.map(c => <DropdownMenuItem key={c.id} onClick={() => updatePage(page.id, { cover: c.id })}>{c.label}</DropdownMenuItem>)}</DropdownMenuContent></DropdownMenu><Button size="sm" variant="secondary" onClick={() => updatePage(page.id, { cover: null })}><X data-icon="inline-start" /> Remove</Button></div></div>}<div className={`mx-auto w-full max-w-3xl px-6 ${cover ? 'pt-0' : 'pt-16'}`}><div className="flex flex-col gap-2">{page.icon && <div className={cover ? '-mt-9' : ''}><Popover open={emojiOpen} onOpenChange={setEmojiOpen}><PopoverTrigger asChild><button type="button" aria-label="Change page icon" className="rounded-lg p-1 text-7xl leading-none transition-colors hover:bg-accent">{page.icon}</button></PopoverTrigger><PopoverContent className="w-80"><EmojiPicker onPick={e => { updatePage(page.id, { icon: e }); setEmojiOpen(false) }} onRemove={() => { updatePage(page.id, { icon: null }); setEmojiOpen(false) }} /></PopoverContent></Popover></div>}<div className="page-hero-actions flex gap-2">{!page.icon && <Popover open={emojiOpen} onOpenChange={setEmojiOpen}><PopoverTrigger asChild><Button size="sm" variant="ghost"><Smile data-icon="inline-start" /> Add icon</Button></PopoverTrigger><PopoverContent className="w-80"><EmojiPicker onPick={e => { updatePage(page.id, { icon: e }); setEmojiOpen(false) }} /></PopoverContent></Popover>}{!page.cover && <Button size="sm" variant="ghost" onClick={() => updatePage(page.id, { cover: COVERS[0].id })}><Image data-icon="inline-start" /> Add cover</Button>}</div><textarea ref={el => { titleRef.current = el; autoSize(el) }} aria-label="Page title" placeholder="Untitled" value={page.title} rows={1} onChange={e => { updatePage(page.id, { title: e.target.value }); autoSize(e.target) }} onKeyDown={e => { if (e.key === 'Enter' && !e.nativeEvent.isComposing && e.keyCode !== 229) { e.preventDefault(); onFocusFirstBlock() } }} className="w-full resize-none overflow-hidden border-0 bg-transparent text-4xl font-bold leading-tight outline-none placeholder:text-muted-foreground focus-visible:ring-0" /></div></div></div>
+  const { updatePage } = useWorkspace()
+  const [emojiOpen, setEmojiOpen] = useState(false)
+  const titleRef = useRef<HTMLTextAreaElement>(null)
+  const cover = coverCss(page.cover)
+
+  function autoSize(el: HTMLTextAreaElement | null) {
+    if (!el) return
+    el.style.height = 'auto'
+    el.style.height = `${el.scrollHeight}px`
+  }
+
+  return (
+    <div>
+      {cover && (
+        <div
+          role="img"
+          aria-label="Page cover"
+          className="page-hero-cover relative h-52 w-full"
+          style={{ background: cover }}
+        >
+          <div className="page-hero-cover-actions absolute bottom-3 right-4 flex gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="sm" variant="secondary">
+                  Change cover
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {COVERS.map((c) => (
+                  <DropdownMenuItem key={c.id} onClick={() => updatePage(page.id, { cover: c.id })}>
+                    {c.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button size="sm" variant="secondary" onClick={() => updatePage(page.id, { cover: null })}>
+              <X data-icon="inline-start" /> Remove
+            </Button>
+          </div>
+        </div>
+      )}
+      <div className={`page-column ${cover ? 'pt-0' : 'pt-16'}`}>
+        <div className="flex flex-col gap-1">
+          {page.icon && (
+            <div className={cover ? '-mt-12' : ''}>
+              <Popover open={emojiOpen} onOpenChange={setEmojiOpen}>
+                <PopoverTrigger asChild>
+                  <button
+                    type="button"
+                    aria-label="Change page icon"
+                    className="rounded-lg p-1 text-7xl leading-none transition-colors hover:bg-accent"
+                  >
+                    {page.icon}
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80">
+                  <EmojiPicker
+                    onPick={(e) => {
+                      updatePage(page.id, { icon: e })
+                      setEmojiOpen(false)
+                    }}
+                    onRemove={() => {
+                      updatePage(page.id, { icon: null })
+                      setEmojiOpen(false)
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+          )}
+          <div className="page-hero-actions -ml-1 flex gap-1">
+            {!page.icon && (
+              <Popover open={emojiOpen} onOpenChange={setEmojiOpen}>
+                <PopoverTrigger asChild>
+                  <Button size="sm" variant="ghost" className="text-muted-foreground">
+                    <Smile data-icon="inline-start" /> Add icon
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80">
+                  <EmojiPicker
+                    onPick={(e) => {
+                      updatePage(page.id, { icon: e })
+                      setEmojiOpen(false)
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
+            )}
+            {!page.cover && (
+              <Button
+                size="sm"
+                variant="ghost"
+                className="text-muted-foreground"
+                onClick={() => updatePage(page.id, { cover: COVERS[0].id })}
+              >
+                <Image data-icon="inline-start" /> Add cover
+              </Button>
+            )}
+          </div>
+          <textarea
+            ref={(el) => {
+              titleRef.current = el
+              autoSize(el)
+            }}
+            aria-label="Page title"
+            placeholder="Untitled"
+            value={page.title}
+            rows={1}
+            onChange={(e) => {
+              updatePage(page.id, { title: e.target.value })
+              autoSize(e.target)
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.nativeEvent.isComposing && e.keyCode !== 229) {
+                e.preventDefault()
+                onFocusFirstBlock()
+              }
+            }}
+            className="w-full resize-none overflow-hidden border-0 bg-transparent text-4xl font-bold tracking-tight outline-none placeholder:text-muted-foreground/70 focus-visible:ring-0"
+          />
+        </div>
+      </div>
+    </div>
+  )
 }
 
-function EmojiPicker({ onPick, onRemove }: { onPick: (e: string) => void; onRemove?: () => void }) { return <div className="flex flex-col gap-3"><div role="listbox" aria-label="Choose an icon" className="grid grid-cols-8 gap-1">{EMOJIS.map(e => <button key={e} type="button" role="option" aria-label={e} onClick={() => onPick(e)} className="emoji-option aspect-square rounded-md text-xl hover:bg-accent">{e}</button>)}</div>{onRemove && <Button size="sm" variant="ghost" onClick={onRemove}>Remove icon</Button>}</div> }
+function EmojiPicker({ onPick, onRemove }: { onPick: (e: string) => void; onRemove?: () => void }) {
+  return (
+    <div className="flex flex-col gap-3">
+      <div role="listbox" aria-label="Choose an icon" className="grid grid-cols-8 gap-1">
+        {EMOJIS.map((e) => (
+          <button
+            key={e}
+            type="button"
+            role="option"
+            aria-label={e}
+            onClick={() => onPick(e)}
+            className="emoji-option aspect-square rounded-md text-xl hover:bg-accent"
+          >
+            {e}
+          </button>
+        ))}
+      </div>
+      {onRemove && (
+        <Button size="sm" variant="ghost" onClick={onRemove}>
+          Remove icon
+        </Button>
+      )}
+    </div>
+  )
+}

@@ -4,7 +4,7 @@ import { Providers } from '@/components/providers'
 
 export const metadata: Metadata = {
   title: 'Notes — Workspace',
-  description: 'A Notion-style workspace with nested pages and a block editor, built with the Primer design system.',
+  description: 'A Notion-style workspace with nested pages, favorites, search, and a block editor built with shadcn/ui.',
 }
 
 export const viewport: Viewport = {
@@ -21,9 +21,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-color-mode="dark"
-      data-light-theme="light"
-      data-dark-theme="dark"
+      className="dark"
       suppressHydrationWarning
     >
       <body suppressHydrationWarning>

@@ -39,8 +39,8 @@ export const COVERS: { id: string; label: string; css: string }[] = [
   { id: 'sunset', label: 'Sunset', css: 'linear-gradient(135deg, var(--destructive), var(--secondary))' },
   { id: 'meadow', label: 'Meadow', css: 'linear-gradient(135deg, var(--secondary), var(--primary))' },
   { id: 'ember', label: 'Ember', css: 'linear-gradient(135deg, var(--destructive), var(--muted))' },
-  { id: 'slate', label: 'Slate', css: 'linear-gradient(135deg, var(--bgColor-neutral-emphasis), var(--bgColor-inset))' },
-  { id: 'lavender', label: 'Lavender', css: 'linear-gradient(135deg, var(--bgColor-done-emphasis), var(--bgColor-sponsors-emphasis))' },
+  { id: 'slate', label: 'Slate', css: 'linear-gradient(135deg, var(--muted-foreground), var(--muted))' },
+  { id: 'lavender', label: 'Lavender', css: 'linear-gradient(135deg, var(--accent), var(--secondary))' },
 ]
 
 export function coverCss(id: string | null) {
@@ -59,7 +59,7 @@ export function createSeedWorkspace(): Workspace {
         block('heading1', 'Welcome to your workspace'),
         block(
           'paragraph',
-          'This is a Notion-style editor built entirely with the Primer design system. Every page is made of blocks — click anywhere and start typing.',
+          'This is a Notion-style editor built entirely with shadcn/ui. Every page is made of blocks — click anywhere and start typing.',
         ),
         block('callout', 'Tip: type / at the start of an empty block to open the block menu.'),
         block('heading2', 'Things to try'),

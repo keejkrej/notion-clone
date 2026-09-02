@@ -1,93 +1,23 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { TreeView } from '@primer/react'
-import { FileIcon, PlusIcon, StarFillIcon, StarIcon, TrashIcon } from '@primer/octicons-react'
-import type { Page } from '@/lib/types'
+import { ChevronRight, FileText, MoreHorizontal, Plus, Star, StarOff, Trash2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { useWorkspace } from '@/lib/workspace-store'
 
-interface PageTreeProps {
-  pages: Page[]
-  currentPageId: string
-  label: string
-  /** When true, sub-pages are not rendered (used for Favorites) */
-  flat?: boolean
+export function PageTree({ currentPageId }: { currentPageId: string }) {
+  const { rootPages, favorites } = useWorkspace()
+  return <div className="page-tree flex flex-col gap-4" aria-label="Workspace pages"><section><div className="mb-1 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Favorites</div>{favorites.length ? favorites.map(p => <PageTreeItem key={`fav-${p.id}`} page={p} currentPageId={currentPageId} flat />) : <p className="px-2 text-xs text-muted-foreground">No favorites yet</p>}</section><section><div className="mb-1 flex items-center justify-between px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground"><span>Private</span><NewPageButton /></div>{rootPages.length ? rootPages.map(p => <PageTreeItem key={p.id} page={p} currentPageId={currentPageId} />) : <p className="px-2 text-xs text-muted-foreground">No pages yet.</p>}</section></div>
 }
 
-export function PageTree({ pages, currentPageId, label, flat }: PageTreeProps) {
-  return (
-    <TreeView aria-label={label} className="page-tree">
-      {pages.map((p) => (
-        <PageTreeItem key={p.id} page={p} currentPageId={currentPageId} flat={flat} />
-      ))}
-    </TreeView>
-  )
-}
+function NewPageButton() { const router = useRouter(); const { createPage } = useWorkspace(); return <Button variant="ghost" size="icon" className="size-6" aria-label="Add a page" onClick={() => router.push(`/p/${createPage(null)}`)}><Plus className="size-3.5" /></Button> }
 
-function PageTreeItem({
-  page,
-  currentPageId,
-  flat,
-}: {
-  page: Page
-  currentPageId: string
-  flat?: boolean
-}) {
-  const router = useRouter()
-  const { childrenOf, breadcrumbsFor, createPage, updatePage, trashPage } = useWorkspace()
-  const children = flat ? [] : childrenOf(page.id)
-  const isCurrent = page.id === currentPageId
-  // Keep the branch open when the current page lives inside it.
-  const containsCurrent = !flat && breadcrumbsFor(currentPageId).some((b) => b.id === page.id)
-  const name = page.title || 'Untitled'
-
-  return (
-    <TreeView.Item
-      id={`${flat ? 'fav' : 'tree'}-${page.id}`}
-      current={isCurrent}
-      defaultExpanded={containsCurrent}
-      onSelect={() => router.push(`/p/${page.id}`)}
-      secondaryActions={[
-        {
-          label: page.favorite ? 'Remove from favorites' : 'Add to favorites',
-          icon: page.favorite ? StarFillIcon : StarIcon,
-          onClick: () => updatePage(page.id, { favorite: !page.favorite }),
-        },
-        {
-          label: 'Add sub-page',
-          icon: PlusIcon,
-          onClick: () => {
-            const id = createPage(page.id)
-            router.push(`/p/${id}`)
-          },
-        },
-        {
-          label: 'Move to trash',
-          icon: TrashIcon,
-          onClick: () => {
-            trashPage(page.id)
-            if (isCurrent || containsCurrent) router.push('/p/getting-started')
-          },
-        },
-      ]}
-    >
-      <TreeView.LeadingVisual label={page.icon ? '' : 'Page'}>
-        {page.icon ? (
-          <span aria-hidden style={{ fontSize: 'var(--text-body-size-medium)', lineHeight: 1 }}>
-            {page.icon}
-          </span>
-        ) : (
-          <FileIcon />
-        )}
-      </TreeView.LeadingVisual>
-      {name}
-      {children.length > 0 && (
-        <TreeView.SubTree aria-label={`Pages inside ${name}`}>
-          {children.map((c) => (
-            <PageTreeItem key={c.id} page={c} currentPageId={currentPageId} />
-          ))}
-        </TreeView.SubTree>
-      )}
-    </TreeView.Item>
-  )
+function PageTreeItem({ page, currentPageId, flat }: { page: any; currentPageId: string; flat?: boolean }) {
+  const router = useRouter(); const { childrenOf, breadcrumbsFor, createPage, updatePage, trashPage } = useWorkspace(); const children = flat ? [] : childrenOf(page.id); const current = page.id === currentPageId; const contains = !flat && breadcrumbsFor(currentPageId).some((b) => b.id === page.id); const name = page.title || 'Untitled'
+  const actions = <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost" size="icon" data-slot="tree-action" className="size-7 shrink-0" aria-label={`Actions for ${name}`}><MoreHorizontal className="size-4" /></Button></DropdownMenuTrigger><DropdownMenuContent align="start"><DropdownMenuItem onClick={() => updatePage(page.id, { favorite: !page.favorite })}>{page.favorite ? <StarOff data-icon="inline-start" /> : <Star data-icon="inline-start" />} {page.favorite ? 'Remove favorite' : 'Add favorite'}</DropdownMenuItem><DropdownMenuItem onClick={() => router.push(`/p/${createPage(page.id)}`)}><Plus data-icon="inline-start" /> Add sub-page</DropdownMenuItem><DropdownMenuItem onClick={() => { trashPage(page.id); if (current || contains) router.push('/p/getting-started') }}><Trash2 data-icon="inline-start" /> Move to trash</DropdownMenuItem></DropdownMenuContent></DropdownMenu>
+  const row = <div className={`group flex min-w-0 items-center gap-1 rounded-md px-2 py-1 text-sm transition-colors hover:bg-accent ${current ? 'bg-accent font-medium' : ''}`}><button type="button" className="flex min-w-0 flex-1 items-center gap-2 text-left" onClick={() => router.push(`/p/${page.id}`)}><FileText className="size-4 shrink-0 text-muted-foreground" /><span className="shrink-0">{page.icon || '📄'}</span><span className="truncate">{name}</span></button>{actions}</div>
+  if (!children.length) return row
+  return <Collapsible defaultOpen={contains || current}><div>{<CollapsibleTrigger asChild><div className="flex items-center"> <ChevronRight className="size-3 shrink-0 text-muted-foreground transition-transform data-[state=open]:rotate-90" />{row}</div></CollapsibleTrigger>}<CollapsibleContent className="ml-4 border-l pl-1">{children.map((c: any) => <PageTreeItem key={c.id} page={c} currentPageId={currentPageId} />)}</CollapsibleContent></div></Collapsible>
 }

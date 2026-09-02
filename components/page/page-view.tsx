@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ActionList, Text } from '@primer/react'
-import { FileIcon } from '@primer/octicons-react'
+import { FileText } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { useWorkspace } from '@/lib/workspace-store'
 import { PageToolbar } from './page-toolbar'
 import { PageHero } from './page-hero'
@@ -14,52 +14,7 @@ export function PageView({ pageId }: { pageId: string }) {
   const { ws, setBlocks, childrenOf } = useWorkspace()
   const page = ws.pages[pageId]
   const [focusSignal, setFocusSignal] = useState(0)
-  const children = childrenOf(pageId)
-
   if (!page) return null
-
-  return (
-    <article className="page-view" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-      <PageToolbar page={page} />
-      <PageHero page={page} onFocusFirstBlock={() => setFocusSignal((s) => s + 1)} />
-      <div
-        style={{
-          maxWidth: 760,
-          width: '100%',
-          margin: '0 auto',
-          padding: 'var(--base-size-16) var(--base-size-24) var(--base-size-96)',
-        }}
-      >
-        <BlockEditor
-          blocks={page.blocks}
-          onChange={(blocks) => setBlocks(page.id, blocks)}
-          focusFirstSignal={focusSignal}
-        />
-
-        {children.length > 0 && (
-          <section aria-labelledby="subpages-heading" style={{ marginTop: 'var(--base-size-8)' }}>
-            <Text
-              as="h2"
-              id="subpages-heading"
-              size="small"
-              weight="semibold"
-              style={{ color: 'var(--fgColor-muted)', display: 'block', marginBottom: 'var(--base-size-4)' }}
-            >
-              Sub-pages
-            </Text>
-            <ActionList variant="full">
-              {children.map((c) => (
-                <ActionList.Item key={c.id} onSelect={() => router.push(`/p/${c.id}`)}>
-                  <ActionList.LeadingVisual>
-                    {c.icon ? <span aria-hidden>{c.icon}</span> : <FileIcon />}
-                  </ActionList.LeadingVisual>
-                  {c.title || 'Untitled'}
-                </ActionList.Item>
-              ))}
-            </ActionList>
-          </section>
-        )}
-      </div>
-    </article>
-  )
+  const children = childrenOf(pageId)
+  return <article className="page-view flex min-h-full flex-col"><PageToolbar page={page} /><PageHero page={page} onFocusFirstBlock={() => setFocusSignal((s) => s + 1)} /><div className="mx-auto w-full max-w-3xl px-6 pb-24 pt-4"><BlockEditor blocks={page.blocks} onChange={(blocks) => setBlocks(page.id, blocks)} focusFirstSignal={focusSignal} />{children.length > 0 && <section className="mt-8"><h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Sub-pages</h2><div className="flex flex-col gap-1">{children.map((c) => <Button key={c.id} variant="ghost" className="justify-start gap-3" onClick={() => router.push(`/p/${c.id}`)}><FileText className="size-4 text-muted-foreground" />{c.icon || '📄'} {c.title || 'Untitled'}</Button>)}</div></section>}</div></article>
 }

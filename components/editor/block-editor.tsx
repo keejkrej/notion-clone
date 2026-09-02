@@ -134,8 +134,7 @@ export function BlockEditor({ blocks, onChange, focusFirstSignal }: BlockEditorP
 
   return (
     <div
-      className="block-editor"
-      style={{ display: 'flex', flexDirection: 'column', gap: 'var(--base-size-2)' }}
+      className="block-editor flex flex-col gap-1"
     >
       {blocks.map((b, i) => (
         <BlockRow

@@ -9,7 +9,7 @@ import { PageTree } from './page-tree'
 
 export function Sidebar({ currentPageId }: { currentPageId: string }) {
   const router = useRouter()
-  const { ws, createPage, sidebarOpen, setSidebarOpen, setSearchOpen, setTrashOpen } = useWorkspace()
+  const { ws, sidebarOpen, setSidebarOpen, setSearchOpen, setTrashOpen } = useWorkspace()
 
   if (!sidebarOpen) {
     return (
@@ -35,7 +35,7 @@ export function Sidebar({ currentPageId }: { currentPageId: string }) {
         <Button
           variant="ghost"
           className="gap-2 font-semibold"
-          onClick={() => router.push(`/p/${ws.rootId}`)}
+          onClick={() => router.push(`/p/${ws.rootOrder[0] ?? ''}`)}
         >
           <span className="grid size-7 place-items-center rounded-md bg-primary text-xs font-semibold text-primary-foreground">
             {ws.name.charAt(0)}
@@ -93,3 +93,4 @@ export function Sidebar({ currentPageId }: { currentPageId: string }) {
       </div>
     </nav>
   )
+}

@@ -35,10 +35,10 @@ function page(
 }
 
 export const COVERS: { id: string; label: string; css: string }[] = [
-  { id: 'aurora', label: 'Aurora', css: 'linear-gradient(135deg, var(--bgColor-accent-emphasis), var(--bgColor-done-emphasis))' },
-  { id: 'sunset', label: 'Sunset', css: 'linear-gradient(135deg, var(--bgColor-severe-emphasis), var(--bgColor-sponsors-emphasis))' },
-  { id: 'meadow', label: 'Meadow', css: 'linear-gradient(135deg, var(--bgColor-success-emphasis), var(--bgColor-accent-emphasis))' },
-  { id: 'ember', label: 'Ember', css: 'linear-gradient(135deg, var(--bgColor-danger-emphasis), var(--bgColor-attention-emphasis))' },
+  { id: 'aurora', label: 'Aurora', css: 'linear-gradient(135deg, var(--primary), var(--accent))' },
+  { id: 'sunset', label: 'Sunset', css: 'linear-gradient(135deg, var(--destructive), var(--secondary))' },
+  { id: 'meadow', label: 'Meadow', css: 'linear-gradient(135deg, var(--secondary), var(--primary))' },
+  { id: 'ember', label: 'Ember', css: 'linear-gradient(135deg, var(--destructive), var(--muted))' },
   { id: 'slate', label: 'Slate', css: 'linear-gradient(135deg, var(--bgColor-neutral-emphasis), var(--bgColor-inset))' },
   { id: 'lavender', label: 'Lavender', css: 'linear-gradient(135deg, var(--bgColor-done-emphasis), var(--bgColor-sponsors-emphasis))' },
 ]

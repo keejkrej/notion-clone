@@ -1,84 +1,14 @@
 'use client'
 
 import { useEffect, useMemo, useRef } from 'react'
-import { ActionList, Text } from '@primer/react'
+import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '@/components/ui/command'
 import type { BlockType } from '@/lib/types'
 import { BLOCK_TYPES } from './block-types'
 
-interface SlashMenuProps {
-  query: string
-  activeIndex: number
-  onHover: (i: number) => void
-  onPick: (type: BlockType) => void
-}
-
-export function filterBlockTypes(query: string) {
-  const q = query.trim().toLowerCase()
-  if (!q) return BLOCK_TYPES
-  return BLOCK_TYPES.filter(
-    (b) => b.label.toLowerCase().includes(q) || b.keywords.some((k) => k.includes(q)),
-  )
-}
-
+interface SlashMenuProps { query: string; activeIndex: number; onHover: (i: number) => void; onPick: (type: BlockType) => void }
+export function filterBlockTypes(query: string) { const q = query.trim().toLowerCase(); return q ? BLOCK_TYPES.filter((b) => b.label.toLowerCase().includes(q) || b.keywords.some((k) => k.includes(q))) : BLOCK_TYPES }
 export function SlashMenu({ query, activeIndex, onHover, onPick }: SlashMenuProps) {
-  const items = useMemo(() => filterBlockTypes(query), [query])
-  const listRef = useRef<HTMLDivElement>(null)
-
-  // Keep the active item visible when navigating with the keyboard.
-  useEffect(() => {
-    const el = listRef.current?.querySelector<HTMLElement>(`[data-index="${activeIndex}"]`)
-    el?.scrollIntoView({ block: 'nearest' })
-  }, [activeIndex])
-
-  return (
-    <div
-      ref={listRef}
-      role="presentation"
-      style={{
-        position: 'absolute',
-        top: '100%',
-        left: 0,
-        zIndex: 20,
-        marginTop: 'var(--base-size-4)',
-        width: 320,
-        maxHeight: 320,
-        overflowY: 'auto',
-        backgroundColor: 'var(--overlay-bgColor)',
-        border: 'var(--borderWidth-thin) solid var(--borderColor-default)',
-        borderRadius: 'var(--borderRadius-large)',
-        boxShadow: 'var(--shadow-floating-medium)',
-      }}
-    >
-      {items.length === 0 ? (
-        <div style={{ padding: 'var(--base-size-12)' }}>
-          <Text size="small" style={{ color: 'var(--fgColor-muted)' }}>
-            No results
-          </Text>
-        </div>
-      ) : (
-        <ActionList role="listbox" aria-label="Block types">
-          <ActionList.GroupHeading>Basic blocks</ActionList.GroupHeading>
-          {items.map((b, i) => {
-            const IconComp = b.icon
-            return (
-              <ActionList.Item
-                key={b.type}
-                role="option"
-                active={i === activeIndex}
-                onSelect={() => onPick(b.type)}
-                onMouseEnter={() => onHover(i)}
-                data-index={i}
-              >
-                <ActionList.LeadingVisual>
-                  <IconComp />
-                </ActionList.LeadingVisual>
-                {b.label}
-                <ActionList.Description variant="block">{b.description}</ActionList.Description>
-              </ActionList.Item>
-            )
-          })}
-        </ActionList>
-      )}
-    </div>
-  )
+  const items = useMemo(() => filterBlockTypes(query), [query]); const listRef = useRef<HTMLDivElement>(null)
+  useEffect(() => { listRef.current?.querySelector<HTMLElement>(`[data-index="${activeIndex}"]`)?.scrollIntoView({ block: 'nearest' }) }, [activeIndex])
+  return <Command ref={listRef} className="absolute left-0 top-full z-20 mt-1 w-80 overflow-hidden rounded-lg border shadow-lg"><CommandList className="max-h-80"><CommandEmpty>No results</CommandEmpty><CommandGroup heading="Basic blocks">{items.map((b, i) => { const Icon = b.icon; return <CommandItem key={b.type} data-index={i} value={`${b.type} ${b.label}`} onMouseEnter={() => onHover(i)} onSelect={() => onPick(b.type)} className={i === activeIndex ? 'bg-accent' : ''}><Icon data-icon="inline-start" /><span><span className="block">{b.label}</span><span className="block text-xs text-muted-foreground">{b.description}</span></span></CommandItem> })}</CommandGroup></CommandList></Command>
 }

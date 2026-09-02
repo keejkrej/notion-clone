@@ -1,6 +1,6 @@
 'use client'
 
-import { ActionList, Button, IconButton, Stack, Text } from '@primer/react'
+import { IconButton, Stack, Text } from '@primer/react'
 import { Blankslate, Dialog } from '@primer/react/experimental'
 import { FileIcon, HistoryIcon, TrashIcon, XIcon } from '@primer/octicons-react'
 import { useWorkspace } from '@/lib/workspace-store'
@@ -44,45 +44,66 @@ export function TrashDialog() {
           <Blankslate.Description>Pages you move to the trash will show up here.</Blankslate.Description>
         </Blankslate>
       ) : (
-        <div style={{ margin: 'calc(-1 * var(--base-size-8)) calc(-1 * var(--base-size-16))' }}>
-          <ActionList variant="full" showDividers>
-            {topLevel.map((p) => (
-              <ActionList.Item key={p.id} onSelect={() => restorePage(p.id)}>
-                <ActionList.LeadingVisual>
-                  {p.icon ? <span aria-hidden>{p.icon}</span> : <FileIcon />}
-                </ActionList.LeadingVisual>
-                {p.title || 'Untitled'}
-                <ActionList.Description variant="inline">
-                  Deleted {new Date(p.deletedAt ?? 0).toLocaleDateString()}
-                </ActionList.Description>
-                <ActionList.TrailingVisual>
+        <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+          {topLevel.map((p, i) => {
+            const title = p.title || 'Untitled'
+            return (
+              <li
+                key={p.id}
+                style={{
+                  borderTop: i === 0 ? undefined : 'var(--borderWidth-thin) solid var(--borderColor-muted)',
+                }}
+              >
+                <Stack
+                  direction="horizontal"
+                  align="center"
+                  gap="condensed"
+                  style={{ padding: 'var(--base-size-8) 0', minHeight: 'var(--control-medium-size)' }}
+                >
+                  <span
+                    aria-hidden
+                    style={{
+                      width: 'var(--base-size-16)',
+                      display: 'inline-flex',
+                      justifyContent: 'center',
+                      color: 'var(--fgColor-muted)',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {p.icon ? p.icon : <FileIcon />}
+                  </span>
+                  <Stack direction="horizontal" align="baseline" gap="condensed" style={{ flex: 1, minWidth: 0 }}>
+                    <Text
+                      weight="semibold"
+                      style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                    >
+                      {title}
+                    </Text>
+                    <Text size="small" style={{ color: 'var(--fgColor-muted)', whiteSpace: 'nowrap' }}>
+                      Deleted {new Date(p.deletedAt ?? 0).toLocaleDateString()}
+                    </Text>
+                  </Stack>
                   <Stack direction="horizontal" gap="condensed">
                     <IconButton
                       icon={HistoryIcon}
-                      aria-label={`Restore ${p.title || 'Untitled'}`}
+                      aria-label={`Restore ${title}`}
                       variant="invisible"
                       size="small"
-                      onClick={(e: React.MouseEvent) => {
-                        e.stopPropagation()
-                        restorePage(p.id)
-                      }}
+                      onClick={() => restorePage(p.id)}
                     />
                     <IconButton
                       icon={XIcon}
-                      aria-label={`Permanently delete ${p.title || 'Untitled'}`}
+                      aria-label={`Permanently delete ${title}`}
                       variant="invisible"
                       size="small"
-                      onClick={(e: React.MouseEvent) => {
-                        e.stopPropagation()
-                        deletePage(p.id)
-                      }}
+                      onClick={() => deletePage(p.id)}
                     />
                   </Stack>
-                </ActionList.TrailingVisual>
-              </ActionList.Item>
-            ))}
-          </ActionList>
-        </div>
+                </Stack>
+              </li>
+            )
+          })}
+        </ul>
       )}
     </Dialog>
   )
